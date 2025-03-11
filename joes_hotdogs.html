@@ -1,0 +1,136 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3: Associative Arrays</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        #menu {
+            border: solid black 3px;
+            background-color: red;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #textInput {
+            margin: 20px;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        #shoppingCart {
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        button{
+            margin: 5px;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+
+        }
+
+        button:hover{
+            background-color: yellow;
+        } 
+    </style>
+</head>
+<body>
+    <h2>Welcome to Joe's Hotdog</h2>
+    <h3>MENU</h3>
+    <div id="menu"></div>
+  
+    <input type="text" id="textInput" placeholder="Enter item"><!--Text Input-->
+    <button onclick="addToCart()">Add to Cart</button> <!--Add to Cart button-->
+    <!--Part 3: add a div that defines an area for a shopping cart-->
+    <h3>Shopping Cart</h3>
+    <div id="shoppingCart"></div>
+    <!--Part 3: add an additional button below the "cart" labelled "Checkout"-->
+    <button onclick="checkout()">Checkout</button>
+
+    <script>
+        //Part 1: Create a representation of the items and prices as an associative array of items and prices (using array or object format)
+        const foodItems = {
+            hotdogs: 4,
+            fries: 3.50,
+            soda: 1.50,
+            sauerkraut: 1
+        };
+
+        const cart = { hotdogs: 0, fries: 0, soda: 0, sauerkraut: 0};
+
+         //Part 2: Display a menu of items on the page using the array
+        function displayMenu(){
+            const menu = document.getElementById("menu");
+            menu.innerHTML = "";
+            for (let item in foodItems){
+                let formattedItem = item.charAt(0).toLowerCase() + item.slice(1);
+                let formattedPrice = foodItems[item].toFixed(2); //formats pricing to ensure consistency of two decimal points
+                menu.innerHTML += `<p>${formattedItem}: $${formattedPrice}</p>`;
+            }   
+        }
+
+        /*Part 4 The elements on the page should function as follows:The user will enter an item in the text box and then click the “Add to Cart” button.  If the item is valid (note that it should be case insensitive), add one to the quantity for that item.
+Display all items with quantity greater than 0 in the cart area (with their current quantity)*/
+
+        function addToCart(){
+            const textInput = document.getElementById("textInput").value.trim().toLowerCase();
+            if (foodItems.hasOwnProperty(textInput)){
+                cart[textInput]++;
+                displayCart();
+            } else {
+                alert("Please enter an item off the menu.");
+            }
+            document.getElementById("textInput").value = "";
+        }
+
+        function displayCart(){
+            const shoppingCart = document.getElementById("shoppingCart");
+            shoppingCart.innerHTML = "";
+            for (let item in cart) {
+                if (cart[item] > 0) {
+                    let formattedItem = item.charAt(0).toLowerCase() + item.slice(1);
+                    shoppingCart.innerHTML += `<p class="cartItem">${formattedItem}: ${cart[item]}</p>`;
+                }
+            }
+        }
+        //Part 5
+        function checkout(){
+            let total = 0;
+            let summary = "Order Summary:\n";
+            for (let item in cart){
+                if (cart[item] > 0){
+                    let cost = cart[item] * foodItems[item];
+                    total += cost;
+                    let formattedItem = item.charAt(0).toLowerCase() + item.slice(1);
+                    summary += `(${cart[item]}) ${formattedItem} at $${cost.toFixed(2)}\n`;
+                }
+            }
+            summary += `Total: $${total.toFixed(2)}`;
+            alert(summary);
+
+            for (let item in cart){
+                cart[item] = 0;
+            }
+            displayCart();
+        }
+        
+        displayMenu();
+
+    </script>
+    
+</body>
+</html>
